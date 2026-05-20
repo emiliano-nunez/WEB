@@ -7,7 +7,7 @@
   const floatingWhatsapp = document.getElementById("floatingWhatsapp");
 
   function updateNavbar() {
-    if (window.scrollY > 60) {
+    if (window.scrollY > 40) {
       navbar.classList.add("scrolled");
     } else {
       navbar.classList.remove("scrolled");
