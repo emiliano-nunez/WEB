@@ -36,9 +36,10 @@
         </button>
 
         <ul class="nav-links" id="navLinks">
-          <li><a href="#servicios">Servicios</a></li>
           <li><a href="#productos">Productos</a></li>
+          <li><a href="#servicios">Servicios</a></li>
           <li><a href="#contacto">Contacto</a></li>
+          <li><a href="#carrito">Carrito</a></li>
           <li>
             <a
               href="https://wa.me/542317401056"
@@ -149,128 +150,7 @@
             auriculares y más.
           </p>
         </div>
-        <div class="products-grid">
-          <!-- <div class="product-card">
-            <div class="product-img-placeholder">📱</div>
-            <div class="product-body">
-              <h3>Funda Protectora Shockproof</h3>
-              <p class="desc">
-                Protección antigolpes de grado militar. Bordes reforzados y
-                agarre antideslizante.
-              </p>
-              <div class="product-footer">
-                <span class="price"><small>$</small>8.500</span>
-                <a
-                  href="https://wa.me/542317401056"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn-sm"
-                  >Consultar</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-img-placeholder">🔌</div>
-            <div class="product-body">
-              <h3>Cargador Rápido 33W</h3>
-              <p class="desc">
-                Compatible con carga rápida PD y QC. Incluye cable USB-C de 1.2m
-                reforzado.
-              </p>
-              <div class="product-footer">
-                <span class="price"><small>$</small>12.900</span>
-                <a
-                  href="https://wa.me/542317401056"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn-sm"
-                  >Consultar</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-img-placeholder">🎧</div>
-            <div class="product-body">
-              <h3>Auriculares Bluetooth 5.3</h3>
-              <p class="desc">
-                Sonido envolvente, cancelación de ruido y 40hs de batería total
-                con estuche.
-              </p>
-              <div class="product-footer">
-                <span class="price"><small>$</small>18.700</span>
-                <a
-                  href="https://wa.me/542317401056"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn-sm"
-                  >Consultar</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-img-placeholder">🛡️</div>
-            <div class="product-body">
-              <h3>Protector de Pantalla Vidrio Templado</h3>
-              <p class="desc">
-                Dureza 9H, antihuellas y burbujas. Instalación gratuita en
-                nuestro local.
-              </p>
-              <div class="product-footer">
-                <span class="price"><small>$</small>3.200</span>
-                <a
-                  href="https://wa.me/542317401056"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn-sm"
-                  >Consultar</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-img-placeholder">🔋</div>
-            <div class="product-body">
-              <h3>Batería Externa 20000mAh</h3>
-              <p class="desc">
-                Carga hasta 5 dispositivos. Compacta, con display LED y carga
-                rápida bidireccional.
-              </p>
-              <div class="product-footer">
-                <span class="price"><small>$</small>22.400</span>
-                <a
-                  href="https://wa.me/542317401056"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn-sm"
-                  >Consultar</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-img-placeholder">📦</div>
-            <div class="product-body">
-              <h3>Cable Trenzado USB-C 2m</h3>
-              <p class="desc">
-                Ultra resistente, compatible con carga rápida y transferencia de
-                datos de alta velocidad.
-              </p>
-              <div class="product-footer">
-                <span class="price"><small>$</small>4.800</span>
-                <a
-                  href="https://wa.me/542317401056"
-                  target="_blank"
-                  rel="noopener"
-                  class="btn-sm"
-                  >Consultar</a
-                >
-              </div>
-            </div>
-          </div> -->
-        </div>
+        <div id="productos-grid" class="products-grid"></div>
 
         <!-- Banner destacado -->
         <div class="featured-banner" id="contacto">
@@ -302,6 +182,18 @@
             </a>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ==================== CARRITO ==================== -->
+    <section class="section" id="carrito">
+      <div class="section-inner">
+        <div class="section-header">
+          <span class="label">Carrito</span>
+          <h2>Tu pedido</h2>
+          <p>Revisa los productos agregados, elimina items o envía tu pedido por WhatsApp.</p>
+        </div>
+        <div id="carrito-contenido"></div>
       </div>
     </section>
 
@@ -362,7 +254,10 @@
         />
       </svg>
     </a>
-    <script src="src/scripts/script.js"></script>
-    <script src="./src/scripts/script-crud.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="src/js/script-crud.js"></script>
+    <script src="src/js/cart.js"></script>
+    <script src="src/js/main.js"></script>
+    <script src="src/js/app.js"></script>
   </body>
 </html>
