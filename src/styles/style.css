@@ -349,6 +349,18 @@ body {
   box-shadow: 0 14px 36px rgba(37, 211, 102, 0.45);
 }
 
+.btn-instagram {
+  background: linear-gradient(135deg, #e1306c 0%, #c13584 45%, #833ab4 100%);
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(225, 48, 108, 0.28);
+}
+
+.btn-instagram:hover {
+  background: linear-gradient(135deg, #c13584 0%, #9330b4 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(145, 58, 174, 0.35);
+}
+
 .btn-outline {
   background: transparent;
   color: #fff;

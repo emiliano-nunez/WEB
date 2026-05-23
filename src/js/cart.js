@@ -1,178 +1,168 @@
 // js/cart.js
 // ========== CARRITO DE COMPRAS ==========
 
-/**
- * Obtiene el carrito actual desde localStorage.
- * @returns {Array} Array de objetos { id, cantidad }
- */
+const CART_KEY = 'carrito';
+
 function obtenerCarrito() {
-  const carritoJSON = localStorage.getItem('carrito');
-  if (carritoJSON) {
-    try {
-      return JSON.parse(carritoJSON);
-    } catch (e) {
-      console.error('Error al leer el carrito:', e);
-      return [];
-    }
+  try {
+    const saved = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    if (!Array.isArray(saved)) return [];
+    return saved
+      .map((item) => ({
+        id: Number(item?.id) || 0,
+        cantidad: Math.max(1, Number(item?.cantidad) || 1),
+      }))
+      .filter((item) => item.id > 0);
+  } catch {
+    return [];
   }
+}
+
+function guardarCarrito(carrito) {
+  localStorage.setItem(CART_KEY, JSON.stringify(carrito));
+}
+
+function productosDisponibles() {
+  const raw = window.productos;
+  if (Array.isArray(raw)) return raw;
+  if (Array.isArray(raw?.value)) return raw.value;
   return [];
 }
 
-/**
- * Guarda el carrito en localStorage.
- * @param {Array} carrito
- */
-function guardarCarrito(carrito) {
-  localStorage.setItem('carrito', JSON.stringify(carrito));
+function obtenerProductoPorId(id) {
+  const productoId = Number(id);
+  return productosDisponibles().find((producto) => Number(producto?.id) === productoId);
 }
 
-/**
- * Agrega un producto al carrito por su id.
- * Si ya existe, incrementa la cantidad.
- * @param {number} id - ID del producto
- * @param {number} cantidad - Cantidad a agregar (por defecto 1)
- */
-function agregarAlCarrito(id, cantidad = 1) {
-  const carrito = obtenerCarrito();
-  const productoExistente = carrito.find(item => item.id === id);
-  
-  cantidad = Math.max(1, parseInt(cantidad, 10) || 1);
-
-  if (productoExistente) {
-    productoExistente.cantidad += cantidad;
-  } else {
-    carrito.push({ id: id, cantidad: cantidad });
-  }
-
-  guardarCarrito(carrito);
-  pintarCarrito(); // Actualiza la vista inmediatamente
-}
-
-/**
- * Aumenta la cantidad de un producto en el carrito.
- * @param {number} id - ID del producto
- */
-function aumentarCantidad(id) {
-  const carrito = obtenerCarrito();
-  const item = carrito.find(i => i.id === id);
-  if (item) {
-    item.cantidad += 1;
-    guardarCarrito(carrito);
-    pintarCarrito();
-  }
-}
-
-/**
- * Disminuye la cantidad de un producto en el carrito.
- * Si llega a 0, lo elimina completamente.
- * @param {number} id - ID del producto
- */
-function disminuirCantidad(id) {
-  const carrito = obtenerCarrito();
-  const item = carrito.find(i => i.id === id);
-  if (item) {
-    if (item.cantidad > 1) {
-      item.cantidad -= 1;
-    } else {
-      carrito = carrito.filter(i => i.id !== id);
-    }
-    guardarCarrito(carrito);
-    pintarCarrito();
-  }
-}
-
-/**
- * Elimina completamente un producto del carrito por su id.
- * @param {number} id - ID del producto
- */
-function eliminarDelCarrito(id) {
-  let carrito = obtenerCarrito();
-  carrito = carrito.filter(item => item.id !== id);
+function actualizarCarrito(carrito) {
   guardarCarrito(carrito);
   pintarCarrito();
 }
 
-/**
- * Obtiene los detalles de un producto desde el array global productos.
- * @param {number} id
- * @returns {object|undefined} Producto encontrado
- */
-function obtenerProductoPorId(id) {
-  // Se asume que 'productos' es un array accesible globalmente
-  // (definido en otro script, por ejemplo productos.js)
-  return window.productos ? window.productos.find(p => p.id === id) : undefined;
+function ajustarCantidad(id, delta) {
+  const carrito = obtenerCarrito();
+  const index = carrito.findIndex((item) => item.id === Number(id));
+
+  if (index === -1) {
+    if (delta > 0) {
+      carrito.push({ id: Number(id), cantidad: 1 });
+      actualizarCarrito(carrito);
+    }
+    return;
+  }
+
+  carrito[index].cantidad = Math.max(0, carrito[index].cantidad + delta);
+
+  if (carrito[index].cantidad === 0) {
+    carrito.splice(index, 1);
+  }
+
+  actualizarCarrito(carrito);
 }
 
-/**
- * Renderiza el carrito en el HTML.
- * Busca un contenedor con id="carrito-contenido" y lo rellena.
- * También actualiza el total y crea el botón de WhatsApp.
- */
+function agregarAlCarrito(id, cantidad = 1) {
+  const carrito = obtenerCarrito();
+  const item = carrito.find((entry) => entry.id === Number(id));
+  const cantidadValida = Math.max(1, Number(cantidad) || 1);
+
+  if (item) {
+    item.cantidad += cantidadValida;
+  } else {
+    carrito.push({ id: Number(id), cantidad: cantidadValida });
+  }
+
+  actualizarCarrito(carrito);
+}
+
+function aumentarCantidad(id) {
+  ajustarCantidad(id, 1);
+}
+
+function disminuirCantidad(id) {
+  ajustarCantidad(id, -1);
+}
+
+function eliminarDelCarrito(id) {
+  actualizarCarrito(obtenerCarrito().filter((item) => item.id !== Number(id)));
+}
+
+function formatearPrecio(valor) {
+  const numero = Number(valor);
+  if (Number.isNaN(numero)) return '0';
+  return numero.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function escapeHtml(str) {
+  return String(str || '').replace(/[&<>'"]/g, (char) => {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    }[char];
+  });
+}
+
 function pintarCarrito() {
   const contenedor = document.getElementById('carrito-contenido');
   if (!contenedor) return;
 
   const carrito = obtenerCarrito();
-
   if (carrito.length === 0) {
-    contenedor.innerHTML = `<p class="carrito-vacio">🛒 Tu carrito está vacío.</p>`;
+    contenedor.innerHTML = '<p class="carrito-vacio">🛒 Tu carrito está vacío.</p>';
     return;
   }
 
-  // Construir filas de productos
-  let itemsHTML = '';
   let total = 0;
+  const lineasPedido = [];
+  const itemsHTML = carrito
+    .map((item) => {
+      const producto = obtenerProductoPorId(item.id);
+      if (!producto) return '';
 
-  for (const item of carrito) {
-    const producto = obtenerProductoPorId(item.id);
-    if (!producto) continue; // Si se eliminó el producto de la lista, lo omitimos
+      const precio = parseFloat(String(producto.precio || '').replace(/[^0-9.-]/g, '')) || 0;
+      const subtotal = precio * item.cantidad;
+      total += subtotal;
+      lineasPedido.push(`- ${producto.nombre} (x${item.cantidad})`);
 
-    const precioNumerico = parseFloat(producto.precio.replace(/[^0-9.-]+/g, ''));
-    const subtotal = precioNumerico * item.cantidad;
-    total += subtotal;
+      return `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <span class="cart-item-nombre">${escapeHtml(producto.nombre)}</span>
+            <span class="cart-item-unit-price">$${formatearPrecio(precio)}</span>
+          </div>
+          <div class="cart-item-controles">
+            <button class="cart-item-btn" type="button" data-id="${item.id}" data-accion="disminuir">−</button>
+            <span class="cart-item-cantidad">${item.cantidad}</span>
+            <button class="cart-item-btn" type="button" data-id="${item.id}" data-accion="aumentar">+</button>
+          </div>
+          <div class="cart-item-subtotal">
+            <span class="cart-item-precio">$${formatearPrecio(subtotal)}</span>
+            <button class="cart-item-eliminar" type="button" data-id="${item.id}" title="Eliminar">🗑️</button>
+          </div>
+        </div>
+      `;
+    })
+    .filter(Boolean)
+    .join('');
 
-    itemsHTML += `
-      <div class="cart-item">
-        <div class="cart-item-info">
-          <span class="cart-item-nombre">${escapeHtml(producto.nombre)}</span>
-          <span class="cart-item-unit-price">$${formatearPrecio(precioNumerico)}</span>
-        </div>
-        <div class="cart-item-controles">
-          <button class="cart-item-btn" type="button" data-id="${item.id}" data-accion="disminuir">−</button>
-          <span class="cart-item-cantidad">${item.cantidad}</span>
-          <button class="cart-item-btn" type="button" data-id="${item.id}" data-accion="aumentar">+</button>
-        </div>
-        <div class="cart-item-subtotal">
-          <span class="cart-item-precio">$${formatearPrecio(subtotal)}</span>
-          <button class="cart-item-eliminar" type="button" data-id="${item.id}" title="Eliminar">🗑️</button>
-        </div>
-      </div>
-    `;
+  if (!itemsHTML) {
+    contenedor.innerHTML = '<p class="carrito-vacio">🛒 Tu carrito está vacío.</p>';
+    return;
   }
 
-  // Mensaje para WhatsApp (preparado para codificar)
-  let mensaje = 'Hola! Quiero pedir:%0A';
-  for (const item of carrito) {
-    const producto = obtenerProductoPorId(item.id);
-    if (!producto) continue;
-    mensaje += `- ${producto.nombre} (x${item.cantidad})%0A`;
-  }
-  mensaje += `%0ATotal: $${formatearPrecio(total)}`;
-
-  const telefono = '542317401056'; // Ajusta al número real de la tienda
-  const enlaceWhatsApp = `https://wa.me/${telefono}?text=${mensaje}`;
+  const mensaje = encodeURIComponent(`Hola! Quiero pedir:\n${lineasPedido.join('\n')}\n\nTotal: $${formatearPrecio(total)}`);
 
   contenedor.innerHTML = `
     <div class="cart-wrapper">
-      <div class="cart-items-list">
-        ${itemsHTML}
-      </div>
+      <div class="cart-items-list">${itemsHTML}</div>
       <div class="cart-resumen">
         <div class="cart-total">
           <span>Total:</span>
           <span class="total-amount">$${formatearPrecio(total)}</span>
         </div>
-        <a href="${enlaceWhatsApp}" target="_blank" rel="noopener" class="btn-enviar-pedido">
+        <a href="https://wa.me/542317401056?text=${mensaje}" target="_blank" rel="noopener" class="btn-enviar-pedido">
           📱 Enviar pedido por WhatsApp
         </a>
       </div>
@@ -184,52 +174,27 @@ function inicializarEventosCarrito() {
   const contenedor = document.getElementById('carrito-contenido');
   if (!contenedor) return;
 
-  contenedor.addEventListener('click', function (event) {
-    const id = parseInt(event.target.dataset.id, 10);
+  contenedor.addEventListener('click', (event) => {
+    const boton = event.target.closest('button[data-id]');
+    if (!boton) return;
+
+    const id = Number(boton.dataset.id);
     if (Number.isNaN(id)) return;
 
-    if (event.target.classList.contains('cart-item-eliminar')) {
+    if (boton.classList.contains('cart-item-eliminar')) {
       eliminarDelCarrito(id);
-    } else if (event.target.classList.contains('cart-item-btn')) {
-      const accion = event.target.dataset.accion;
-      if (accion === 'aumentar') {
-        aumentarCantidad(id);
-      } else if (accion === 'disminuir') {
-        disminuirCantidad(id);
-      }
+      return;
+    }
+
+    if (!boton.classList.contains('cart-item-btn')) return;
+
+    if (boton.dataset.accion === 'aumentar') {
+      aumentarCantidad(id);
+    } else if (boton.dataset.accion === 'disminuir') {
+      disminuirCantidad(id);
     }
   });
 }
 
-/**
- * Formatea un número con puntos como separador de miles.
- * @param {number} num
- * @returns {string} Número formateado
- */
-function formatearPrecio(num) {
-  if (typeof num !== 'number') {
-    num = parseFloat(num);
-  }
-  if (isNaN(num)) return '0';
-  return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
-
-/**
- * Escapa caracteres HTML para evitar XSS.
- * (Se puede reutilizar la misma función del script de productos)
- */
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>]/g, function (m) {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    return m;
-  });
-}
-
-// Inicialización: al cargar la página, renderizamos el carrito y activamos la delegación de eventos
-document.addEventListener('DOMContentLoaded', function () {
-  pintarCarrito();
-  inicializarEventosCarrito();
-});
+pintarCarrito();
+inicializarEventosCarrito();
