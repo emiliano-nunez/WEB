@@ -40,16 +40,10 @@ async function cargarProductos() {
     }
   }
 
-  // Fallback a productos locales si Supabase no está disponible o no hay datos
   if (!productos || productos.length === 0) {
-    if (window.productos && Array.isArray(window.productos) && window.productos.length > 0) {
-      productos = window.productos;
-    } else if (window.productos && Array.isArray(window.productos?.value) && window.productos.value.length > 0) {
-      productos = window.productos.value;
-    } else {
-      contenedor.innerHTML = '<p>No hay productos disponibles.</p>';
-      return;
-    }
+    console.error('Supabase no devolvió productos o la tabla está vacía.', { data: productos });
+    contenedor.innerHTML = '<p>No hay productos disponibles.</p>';
+    return;
   }
 
   window.productos = productos;

@@ -350,6 +350,10 @@ body {
 }
 
 .btn-instagram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: linear-gradient(135deg, #e1306c 0%, #c13584 45%, #833ab4 100%);
   color: #fff;
   box-shadow: 0 8px 28px rgba(225, 48, 108, 0.28);
