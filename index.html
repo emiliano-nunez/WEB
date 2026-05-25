@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="./src/styles/style.css" />
   </head>
   <body>
+    <a href="#contenido" class="skip-link">Saltar al contenido</a>
+
     <!-- ==================== NAVBAR ==================== -->
     <nav class="navbar" id="navbar">
       <div class="navbar-inner">
@@ -41,7 +43,7 @@
           <li><a href="#productos">Productos</a></li>
           <li><a href="#servicios">Servicios</a></li>
           <li><a href="#contacto">Contacto</a></li>
-          <li><a href="#carrito">Carrito</a></li>
+          <li><a href="#carrito">Carrito <span class="cart-badge" id="cartBadge">0</span></a></li>
           <li>
             <a
               href="https://wa.me/542317401056"
@@ -63,13 +65,14 @@
     <div class="nav-overlay" id="navOverlay"></div>
 
     <!-- ==================== HERO ==================== -->
+    <main id="contenido">
     <section class="hero" id="inicio">
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <div class="hero-badge">⚡ Celulares y tablets</div>
-        <div class="hero-badge">💻 computadoras</div>
-        <div class="hero-badge">🎧 Accesorios</div>
-        <h1>Reparamos tu celular <span> promo arreglos en 24hs</span></h1>
+        <a href="#servicios" class="hero-badge">⚡ Celulares y tablets</a>
+        <a href="#servicios" class="hero-badge">💻 computadoras</a>
+        <a href="#productos" class="hero-badge">🎧 Accesorios</a>
+        <h1>Reparamos tu celular <span>garantía de 30 días para módulos</span></h1>
         <p>
           Diagnóstico gratuito, repuestos originales, económicos y de calidad
           original. También encontrá fundas, cargadores, auriculares y más
@@ -103,6 +106,18 @@
             </svg>
             Seguinos en Instagram
           </a>
+          <a
+            href="https://www.facebook.com/profile.php?id=61560685043661"
+            target="_blank"
+            rel="noopener"
+            class="btn btn-facebook"
+            aria-label="Seguinos en Facebook"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Facebook
+          </a>
           <a href="#productos" class="btn btn-primary">🎧 Ver productos</a>
         </div>
       </div>
@@ -119,7 +134,7 @@
             en el acto.
           </p>
         </div>
-        <div class="services-grid">
+        <div class="services-grid" id="servicesGrid">
           <div class="service-card">
             <div class="service-icon"><span>📱</span></div>
             <h3>Reparación de Pantalla</h3>
@@ -127,6 +142,7 @@
               Cambio de display y táctil con repuestos originales. Incluye
               garantía de repuesto de 30 días.
             </p>
+            <a href="https://wa.me/542317401056?text=Hola!%20Quiero%20consultar%20por%20reparaci%C3%B3n%20de%20pantalla" target="_blank" rel="noopener" class="btn-service" aria-label="Consultar por reparación de pantalla por WhatsApp">Consultar</a>
           </div>
           <div class="service-card">
             <div class="service-icon"><span>🔋</span></div>
@@ -135,11 +151,13 @@
               Baterías de distintas gamas. Tu equipo vuelve a cargar sin
               problemas.
             </p>
+            <a href="https://wa.me/542317401056?text=Hola!%20Quiero%20consultar%20por%20cambio%20de%20bater%C3%ADa" target="_blank" rel="noopener" class="btn-service" aria-label="Consultar por cambio de batería por WhatsApp">Consultar</a>
           </div>
           <div class="service-card">
             <div class="service-icon"><span>💧</span></div>
             <h3>Limpieza y Mantenimiento</h3>
             <p>Tratamiento completo de placas y componentes internos.</p>
+            <a href="https://wa.me/542317401056?text=Hola!%20Quiero%20consultar%20por%20limpieza%20y%20mantenimiento" target="_blank" rel="noopener" class="btn-service" aria-label="Consultar por limpieza y mantenimiento por WhatsApp">Consultar</a>
           </div>
           <div class="service-card">
             <div class="service-icon"><span>🔓</span></div>
@@ -148,8 +166,35 @@
               Actualizaciones, liberación de equipos y recuperación de datos.
               Soluciones rápidas.
             </p>
+            <a href="https://wa.me/542317401056?text=Hola!%20Quiero%20consultar%20por%20desbloqueo%20y%20software" target="_blank" rel="noopener" class="btn-service" aria-label="Consultar por desbloqueo y software por WhatsApp">Consultar</a>
+          </div>
+
+          <div class="service-card service-card--extra">
+            <div class="service-icon"><span>🔌</span></div>
+            <h3>Reparación de Placa</h3>
+            <p>Microsoldadura, cambio de componentes.</p>
+            <a href="https://wa.me/542317401056?text=Hola!%20Quiero%20consultar%20por%20reparaci%C3%B3n%20de%20placa" target="_blank" rel="noopener" class="btn-service" aria-label="Consultar por reparación de placa por WhatsApp">Consultar</a>
+          </div>
+          <div class="service-card service-card--extra">
+            <div class="service-icon"><span>🔌</span></div>
+            <h3>Cambio de Conector de Carga</h3>
+            <p>Reparación o reemplazo del pin de carga, USB y flex de carga.</p>
+            <a href="https://wa.me/542317401056?text=Hola!%20Quiero%20consultar%20por%20cambio%20de%20conector%20de%20carga" target="_blank" rel="noopener" class="btn-service" aria-label="Consultar por cambio de conector de carga por WhatsApp">Consultar</a>
+          </div>
+          <div class="service-card service-card--extra">
+            <div class="service-icon"><span>💻</span></div>
+            <h3>Reparación de PC y Notebooks</h3>
+            <p>Diagnóstico y reparación de equipos de escritorio y laptops.</p>
+            <a href="https://wa.me/542317401056?text=Hola!%20Quiero%20consultar%20por%20reparaci%C3%B3n%20de%20pc%20y%20notebooks" target="_blank" rel="noopener" class="btn-service" aria-label="Consultar por reparación de PC y notebooks por WhatsApp">Consultar</a>
+          </div>
+          <div class="service-card service-card--extra">
+            <div class="service-icon"><span>⚙️</span></div>
+            <h3>Instalación de Sistema</h3>
+            <p>Formateo, instalación de Windows, drivers y software a medida.</p>
+            <a href="https://wa.me/542317401056?text=Hola!%20Quiero%20consultar%20por%20instalaci%C3%B3n%20de%20sistema" target="_blank" rel="noopener" class="btn-service" aria-label="Consultar por instalación de sistema por WhatsApp">Consultar</a>
           </div>
         </div>
+        <button class="services-toggle" id="servicesToggle" aria-expanded="false">Ver más servicios ↓</button>
       </div>
     </section>
 
@@ -212,6 +257,8 @@
       </div>
     </section>
 
+    </main>
+
     <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
       <div class="footer-inner">
@@ -240,6 +287,9 @@
           <a href="https://www.instagram.com/reflex.reparaciones" target="_blank" rel="noopener"
             >📸 Instagram: @reflex.reparaciones</a
           >
+          <a href="https://www.facebook.com/profile.php?id=61560685043661" target="_blank" rel="noopener"
+            >👍 Facebook: Reflex Reparaciones</a
+          >
           <p>📍 Av. Saralegui 1071, Buenos Aires</p>
         </div>
         <div class="footer-col">
@@ -254,10 +304,9 @@
       </div>
     </footer>
 
-    <!-- ==================== FLOATING WHATSAPP BUTTON ==================== -->
-    <div class="floating-tooltip" id="floatingTooltip">
-      ¿Necesitás ayuda? 💬
-    </div>
+    <!-- ==================== FLOATING BOTONES ==================== -->
+    <div class="floating-tooltip" id="floatingTooltip">¿Necesitás ayuda? 💬</div>
+    <div class="floating-tooltip" id="floatingCartTooltip">🛒 Ver carrito</div>
     <a
       href="https://wa.me/542317401056"
       target="_blank"
@@ -272,6 +321,20 @@
         />
       </svg>
     </a>
+
+    <!-- ==================== FLOATING CART BUTTON ==================== -->
+    <a
+      href="#carrito"
+      class="floating-cart"
+      id="floatingCart"
+      aria-label="Ver carrito"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zM7.17 14.75l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.86-7.01L19.42 4h-.01l-1.1 2-2.76 5H8.53l-.13-.27L6.16 6l-.95-2-.94-2H1v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25z"/>
+      </svg>
+      <span class="cart-badge" id="floatingCartBadge">0</span>
+    </a>
+    <div class="toast-container" id="toast-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="src/js/supabase.js"></script>
     <script src="src/js/cart.js"></script>

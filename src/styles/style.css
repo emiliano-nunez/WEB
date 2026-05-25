@@ -27,6 +27,30 @@
   padding: 0;
 }
 
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 12px;
+  z-index: 10000;
+  background: var(--accent);
+  color: #0b0f19;
+  padding: 10px 20px;
+  border-radius: 0 0 8px 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--navbar-height);
@@ -153,6 +177,30 @@ body {
   letter-spacing: -0.1px;
 }
 
+.nav-links a[href="#carrito"] {
+  position: relative;
+}
+
+.cart-badge {
+  display: none;
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--whatsapp);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  line-height: 1;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
 .navbar.scrolled .nav-links a {
   color: var(--text);
 }
@@ -212,6 +260,10 @@ body {
 }
 
 .navbar.scrolled .hamburger span {
+  background: var(--bg-dark);
+}
+
+.hamburger.active span {
   background: var(--bg-dark);
 }
 
@@ -282,6 +334,15 @@ body {
   text-transform: uppercase;
   margin-bottom: 24px;
   backdrop-filter: blur(6px);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition);
+}
+
+.hero-badge:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent);
+  transform: translateY(-2px);
 }
 
 .hero h1 {
@@ -363,6 +424,21 @@ body {
   background: linear-gradient(135deg, #c13584 0%, #9330b4 100%);
   transform: translateY(-3px);
   box-shadow: 0 14px 36px rgba(145, 58, 174, 0.35);
+}
+
+.btn-facebook {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #1877f2;
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(24, 119, 242, 0.3);
+}
+.btn-facebook:hover {
+  background: #166fe5;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(24, 119, 242, 0.45);
 }
 
 .btn-outline {
@@ -499,6 +575,66 @@ body {
   color: var(--text-light);
   font-size: 0.9rem;
   line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.btn-service {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--whatsapp);
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 25px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition);
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+}
+
+.btn-service:hover {
+  background: var(--whatsapp-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
+}
+
+.service-card--extra {
+  display: none;
+}
+
+.services-grid.show-all .service-card--extra {
+  display: block;
+}
+
+.services-toggle {
+  display: block;
+  margin: 24px auto 0;
+  background: none;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.services-toggle:hover {
+  background: var(--accent);
+  color: #0b0f19;
+}
+
+.cart-item-btn {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.cart-item-eliminar {
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* ========== PRODUCTOS ========== */
@@ -634,8 +770,8 @@ body {
 .cantidad-btn {
   background: none;
   border: none;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   font-size: 1rem;
   cursor: pointer;
   color: var(--text);
@@ -759,6 +895,42 @@ body {
   color: rgba(255, 255, 255, 0.5);
 }
 
+/* ========== FLOATING BOTONES ========== */
+.floating-cart {
+  position: fixed;
+  bottom: 92px;
+  right: 28px;
+  z-index: 999;
+  width: 60px;
+  height: 60px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 30px rgba(245, 168, 0, 0.45);
+  transition: all var(--transition);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.floating-cart:hover {
+  transform: scale(1.12);
+  box-shadow: 0 14px 40px rgba(245, 168, 0, 0.55);
+}
+
+.floating-cart svg {
+  width: 28px;
+  height: 28px;
+  fill: #fff;
+}
+
+.floating-cart .cart-badge {
+  top: -6px;
+  right: -6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
 /* ========== FLOATING WHATSAPP ========== */
 .floating-whatsapp {
   position: fixed;
@@ -790,6 +962,19 @@ body {
   fill: #fff;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 @keyframes pulse {
   0%,
   100% {
@@ -804,8 +989,6 @@ body {
 
 .floating-tooltip {
   position: fixed;
-  bottom: 98px;
-  right: 28px;
   z-index: 999;
   background: #fff;
   color: var(--text);
@@ -824,6 +1007,50 @@ body {
 .floating-tooltip.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+#floatingTooltip {
+  bottom: 38px;
+  right: 96px;
+}
+
+#floatingCartTooltip {
+  bottom: 102px;
+  right: 96px;
+}
+
+.toast-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px 100px;
+  pointer-events: none;
+}
+
+.toast {
+  background: #fff;
+  color: var(--text);
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  transform: translateY(calc(100% + 20px));
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.toast.visible {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 /* ========== CARRITO ========== */
@@ -1076,6 +1303,17 @@ body {
     padding: 32px 20px;
   }
 
+  .floating-cart {
+    width: 52px;
+    height: 52px;
+    bottom: 76px;
+    right: 16px;
+  }
+  .floating-cart svg {
+    width: 24px;
+    height: 24px;
+  }
+
   .floating-whatsapp {
     width: 52px;
     height: 52px;
@@ -1086,10 +1324,25 @@ body {
     width: 26px;
     height: 26px;
   }
-  .floating-tooltip {
-    bottom: 82px;
-    right: 16px;
+  #floatingTooltip {
+    bottom: 28px;
+    right: 76px;
     font-size: 0.78rem;
+  }
+
+  #floatingCartTooltip {
+    bottom: 84px;
+    right: 76px;
+    font-size: 0.78rem;
+  }
+
+  .toast {
+    font-size: 0.82rem;
+    padding: 12px 20px;
+  }
+
+  .toast-container {
+    padding: 0 16px 80px;
   }
 
   .btn {

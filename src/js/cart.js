@@ -37,6 +37,7 @@ function obtenerProductoPorId(id) {
 function actualizarCarrito(carrito) {
   guardarCarrito(carrito);
   pintarCarrito();
+  actualizarBadge();
 }
 
 function ajustarCantidad(id, delta) {
@@ -47,6 +48,7 @@ function ajustarCantidad(id, delta) {
     if (delta > 0) {
       carrito.push({ id: Number(id), cantidad: 1 });
       actualizarCarrito(carrito);
+      showToast('✅ Producto agregado al carrito');
     }
     return;
   }
@@ -55,6 +57,15 @@ function ajustarCantidad(id, delta) {
 
   if (carrito[index].cantidad === 0) {
     carrito.splice(index, 1);
+    showToast('🗑️ Producto eliminado del carrito');
+    actualizarCarrito(carrito);
+    return;
+  }
+
+  if (delta > 0) {
+    showToast('➕ Cantidad aumentada');
+  } else {
+    showToast('➖ Cantidad disminuida');
   }
 
   actualizarCarrito(carrito);
@@ -67,8 +78,10 @@ function agregarAlCarrito(id, cantidad = 1) {
 
   if (item) {
     item.cantidad += cantidadValida;
+    showToast(`➕ ${cantidadValida} más agregado${cantidadValida > 1 ? 's' : ''}`);
   } else {
     carrito.push({ id: Number(id), cantidad: cantidadValida });
+    showToast(`✅ Producto agregado${cantidadValida > 1 ? ' (x' + cantidadValida + ')' : ''}`);
   }
 
   actualizarCarrito(carrito);
@@ -84,6 +97,35 @@ function disminuirCantidad(id) {
 
 function eliminarDelCarrito(id) {
   actualizarCarrito(obtenerCarrito().filter((item) => item.id !== Number(id)));
+  showToast('🗑️ Producto eliminado del carrito');
+}
+
+function actualizarBadge() {
+  const badges = document.querySelectorAll('.cart-badge');
+  if (!badges.length) return;
+  const carrito = obtenerCarrito();
+  const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  const display = total > 0 ? 'flex' : 'none';
+  const text = total > 99 ? '99+' : total;
+  badges.forEach((badge) => {
+    badge.textContent = text;
+    badge.style.display = display;
+  });
+}
+
+function showToast(mensaje) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = mensaje;
+  container.appendChild(toast);
+  toast.offsetHeight;
+  requestAnimationFrame(() => toast.classList.add('visible'));
+  setTimeout(() => {
+    toast.classList.remove('visible');
+    setTimeout(() => toast.remove(), 400);
+  }, 2800);
 }
 
 function formatearPrecio(valor) {
@@ -202,3 +244,4 @@ function inicializarEventosCarrito() {
 }
 
 inicializarEventosCarrito();
+actualizarBadge();
