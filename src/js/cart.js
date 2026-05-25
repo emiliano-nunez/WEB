@@ -114,6 +114,11 @@ function pintarCarrito() {
     return;
   }
 
+  if (productosDisponibles().length === 0) {
+    contenedor.innerHTML = '<p class="carrito-vacio">Cargando productos...</p>';
+    return;
+  }
+
   let total = 0;
   const lineasPedido = [];
   const itemsHTML = carrito
@@ -196,5 +201,4 @@ function inicializarEventosCarrito() {
   });
 }
 
-pintarCarrito();
 inicializarEventosCarrito();

@@ -1,47 +1,30 @@
-// js/main.js
-
-const SUPABASE_URL = 'https://qjimwhvypjmyfjvttmct.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_dVzjdeMjix23pq_UW1fxHQ_HsiQmrLi';
-
-let supabaseClient = null;
-
-// Intentar inicializar Supabase si está disponible y configurado
-if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes('YOUR_')) {
-  try {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  } catch (e) {
-    console.warn('No se pudo inicializar Supabase:', e);
-  }
-}
-
 async function cargarProductos() {
   const contenedor = document.getElementById('productos-grid');
   if (!contenedor) return;
 
-  let productos = null;
-
-  // Si Supabase está configurado, intentar cargar desde ahí
-  if (supabaseClient) {
-    contenedor.innerHTML = '<p>Cargando productos...</p>';
-    
-    const { data, error } = await supabaseClient
-      .from('productos')
-      .select('*')
-      .order('id', { ascending: true });
-
-    if (error) {
-      console.error('Error cargando productos desde Supabase:', error);
-    } else if (Array.isArray(data)) {
-      productos = data;
-    } else if (data && Array.isArray(data.value)) {
-      productos = data.value;
-    } else {
-      console.warn('Respuesta inesperada de Supabase:', data);
-    }
+  if (!window.supabaseClient) {
+    contenedor.innerHTML = '<p>No se pudo conectar con la base de datos.</p>';
+    if (typeof pintarCarrito === 'function') pintarCarrito();
+    return;
   }
 
-  if (!productos || productos.length === 0) {
-    console.error('Supabase no devolvió productos o la tabla está vacía.', { data: productos });
+  contenedor.innerHTML = '<p>Cargando productos...</p>';
+
+  const { data, error } = await window.supabaseClient
+    .from('productos')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) {
+    console.error('Error cargando productos desde Supabase:', error);
+    contenedor.innerHTML = '<p>Error al cargar productos.</p>';
+    if (typeof pintarCarrito === 'function') pintarCarrito();
+    return;
+  }
+
+  const productos = Array.isArray(data) ? data : [];
+
+  if (productos.length === 0) {
     contenedor.innerHTML = '<p>No hay productos disponibles.</p>';
     return;
   }
