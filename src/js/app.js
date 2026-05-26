@@ -292,4 +292,8 @@
       cerrarConfirmacion();
     }
   });
+  window.addEventListener("load", () => {
+    const el = document.getElementById("loaderOverlay");
+    if (el) el.classList.add("hidden");
+  });
 })();

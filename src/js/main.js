@@ -228,4 +228,7 @@ function escapeHtml(str) {
   });
 }
 
-cargarProductos();
+cargarProductos().finally(() => {
+  const el = document.getElementById("loaderOverlay");
+  if (el) el.classList.add("hidden");
+});
