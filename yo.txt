@@ -1,0 +1,108 @@
+2. WebP + lazy loading
+Problema: las 32 imágenes de productos son .jpg sin optimizar. Pesan ~100-300KB cada una, el sitio tarda en cargar.
+Qué hacer:
+- Convertir todas las imágenes a WebP (formato moderno, ~70% menos peso con misma calidad). Podés usar:
+- Online: squoosh.app (https://squoosh.app) o convertio.co (https://convertio.co)
+- Local: ffmpeg -i imagen.jpg imagen.webp
+- O una herramienta como Imagify o ShortPixel
+- En main.js, cuando renderizás las cards, ya tenés loading="lazy" en el <img>. Eso está bien.
+- Podrías agregar un fallback con <picture> para navegadores viejos que no soportan WebP:
+<picture>
+  <source srcset="img.webp" type="image/webp">
+  <img src="img.jpg" loading="lazy" alt="...">
+</picture>
+Impacto: el mayor de todos. Las imágenes son lo que más pesa en el sitio.
+8. PWA (Service Worker + manifest.json)
+Qué es: hace que el sitio se comporte como una app instalable en el celular.
+Qué necesitás:
+1. manifest.json — archivo con nombre, iconos, color de tema, etc.
+2. sw.js (Service Worker) — script que intercepta peticiones y cachea archivos para que funcione offline parcial.
+3. Registrar el SW desde el HTML con <script>.
+Ejemplo de manifest.json:
+{
+  "name": "Reflex Reparaciones",
+  "short_name": "Reflex",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#f5a800",
+  "icons": [{ "src": "src/img/LOGO.ico", "sizes": "192x192", "type": "image/x-icon" }]
+}
+Lo linkeás en el <head>:
+<link rel="manifest" href="/manifest.json" />
+El Service Worker básicamente:
+- En el evento install → cachea los archivos clave (HTML, CSS, JS, imágenes principales)
+- En fetch → sirve desde caché si está offline, sino desde red
+- En activate → limpia cachés viejas
+Beneficio: el sitio carga instantáneo en visitas repetidas, y funciona (parcialmente) sin internet.
+9. Sitemap.xml + robots.txt
+Qué son: archivos para que Google (y otros buscadores) indexen bien tu sitio.
+robots.txt (en la raíz del proyecto):
+User-agent: *
+Allow: /
+Sitemap: https://tudominio.com/sitemap.xml
+sitemap.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://tudominio.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://tudominio.com/#servicios</loc><priority>0.8</priority></url>
+  <url><loc>https://tudominio.com/#productos</loc><priority>0.8</priority></url>
+  <url><loc>https://tudominio.com/#carrito</loc><priority>0.5</priority></url>
+</urlset>
+Lo subís a Google Search Console para que rastree el sitio más rápido.
+10. Analytics liviano
+Opción recomendada: Umami (https://umami.is) o Plausible (https://plausible.io) (respetan privacidad, sin cookies, livianos).
+En vez de Google Analytics (pesado y bloqueado por adblockers), agregás una línea:
+<script async defer src="https://cloud.umami.is/script.js" data-website-id="TU_ID"></script>
+Métrica que obtenés: visitas, páginas vistas, dispositivos, país. Sin rastrear usuarios.
+11. Breadcrumbs (migas de pan)
+Qué son: una navegación secundaria arriba de cada sección que muestra dónde estás:
+Inicio > Servicios > Reparación de Pantalla
+Para este sitio, como es single-page, los breadcrumbs tienen sentido en la sección de servicios. Se verían así en el HTML de cada service-card o como un <nav> encima de la sección:
+<nav class="breadcrumb" aria-label="Navegación secundaria">
+  <a href="#inicio">Inicio</a>
+  <span>/</span>
+  <a href="#servicios">Servicios</a>
+  <span>/</span>
+  <span>Reparación de Pantalla</span>
+</nav>
+CSS:
+.breadcrumb { font-size: 0.8rem; color: var(--text-light); margin-bottom: 16px; }
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.breadcrumb span { margin: 0 6px; }
+Beneficio: los usuarios siempre saben dónde están, y Google usa la estructura para migas en los resultados de búsqueda.
+Sobre la minificación (punto 20)
+Ya creé el script minify.ps1 y generé los archivos .min. Tenés dos caminos:
+Opción A: Manual (lo que ya tenés)
+Corrés minify.ps1 cada vez que hacés cambios y después cambiás a mano las referencias en index.html:
+<!-- Original (desarrollo) -->
+<link rel="stylesheet" href="./src/styles/style.css" media="print" onload="this.media='all'" />
+<script src="src/js/cart.js"></script>
+<!-- Minificado (producción) -->
+<link rel="stylesheet" href="./src/styles/style.min.css" media="print" onload="this.media='all'" />
+<script src="src/js/cart.min.js"></script>
+Opción B: Script de deploy automatizado
+Crear un deploy.ps1 que:
+1. Corre minify.ps1
+2. Reemplaza automáticamente las URLs en index.html para apuntar a los .min
+3. Copia todo a una carpeta dist/ o deploya directo
+Opción C (recomendada): Swap condicional
+Un script en el <head> que cargue .min si existen:
+<script>
+(function() {
+  var h = document.getElementsByTagName('head')[0];
+  var l = document.createElement('link');
+  l.rel = 'stylesheet';
+  l.href = './src/styles/style.min.css';
+  l.media = 'print';
+  l.onload = function() { this.media = 'all'; };
+  l.onerror = function() {
+    var f = document.createElement('link');
+    f.rel = 'stylesheet';
+    f.href = './src/styles/style.css';
+    h.appendChild(f);
+  };
+  h.appendChild(l);
+})();
+</script>
+Esto carga el .min y si falla (porque no existe), carga el original automáticamente.

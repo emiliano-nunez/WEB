@@ -7,7 +7,36 @@
   const floatingCartTooltip = document.getElementById("floatingCartTooltip");
   const floatingWhatsapp = document.getElementById("floatingWhatsapp");
   const floatingCart = document.getElementById("floatingCart");
+  const darkToggle = document.getElementById("darkToggle");
 
+  // ========== DARK MODE ==========
+  function aplicarTema(tema) {
+    document.documentElement.setAttribute("data-theme", tema);
+    if (darkToggle) {
+      darkToggle.textContent = tema === "dark" ? "☀️" : "🌙";
+      darkToggle.setAttribute("aria-label", tema === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
+    }
+    localStorage.setItem("tema", tema);
+  }
+
+  const temaGuardado = localStorage.getItem("tema");
+  const prefiereOscuro = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const temaInicial = temaGuardado || (prefiereOscuro ? "dark" : "light");
+  aplicarTema(temaInicial);
+
+  if (darkToggle) {
+    darkToggle.addEventListener("click", () => {
+      const actual = document.documentElement.getAttribute("data-theme");
+      aplicarTema(actual === "dark" ? "light" : "dark");
+    });
+  }
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    if (!localStorage.getItem("tema")) {
+      aplicarTema(e.matches ? "dark" : "light");
+    }
+  });
+
+  // ========== NAVBAR ==========
   function updateNavbar() {
     if (window.scrollY > 40) {
       navbar.classList.add("scrolled");
@@ -146,7 +175,7 @@
   });
 
   const cardsToAnimate = document.querySelectorAll(
-    ".service-card, .service-card--extra, .product-card, .featured-banner",
+    ".service-card, .service-card--extra, .product-card, .featured-banner, .productos-toolbar, .services-toggle",
   );
   cardsToAnimate.forEach((card) => {
     card.style.opacity = "0";
@@ -164,13 +193,39 @@
         ? "Mostrar menos servicios ↑"
         : "Ver más servicios ↓";
       servicesToggle.setAttribute("aria-expanded", expanded);
+
+      const extras = servicesGrid.querySelectorAll(".service-card--extra");
+
       if (expanded) {
-        const extras = servicesGrid.querySelectorAll(".service-card--extra");
         extras.forEach((card, i) => {
+          card.style.display = "block";
+          card.style.maxHeight = "0";
+          card.style.opacity = "0";
+          card.style.paddingTop = "0";
+          card.style.paddingBottom = "0";
+          card.style.borderWidth = "0";
+          card.offsetHeight;
           setTimeout(() => {
+            card.style.maxHeight = card.scrollHeight + 64 + "px";
             card.style.opacity = "1";
-            card.style.transform = "translateY(0)";
+            card.style.paddingTop = "32px";
+            card.style.paddingBottom = "32px";
+            card.style.borderWidth = "1px";
           }, i * 80);
+        });
+        if (typeof showToast === "function") {
+          showToast("🔧 Mostrando todos los servicios");
+        }
+      } else {
+        extras.forEach((card) => {
+          card.style.maxHeight = "0";
+          card.style.opacity = "0";
+          card.style.paddingTop = "0";
+          card.style.paddingBottom = "0";
+          card.style.borderWidth = "0";
+          setTimeout(() => {
+            card.style.display = "none";
+          }, 400);
         });
       }
     });

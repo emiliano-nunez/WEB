@@ -35,6 +35,47 @@ async function cargarProductos() {
     pintarCarrito();
   }
   asignarEventosAgregar();
+  inicializarBusquedaYOrden();
+}
+
+function obtenerPrecioNumerico(producto) {
+  return parseFloat(String(producto.precio || '0').replace(/[^0-9.-]/g, '')) || 0;
+}
+
+function filtrarYOrdenar() {
+  const termino = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+  const orden = document.querySelector('.sort-btn.active')?.dataset?.sort || 'default';
+  let lista = window.productos || [];
+  if (termino) {
+    lista = lista.filter((p) =>
+      (p.nombre || '').toLowerCase().includes(termino) ||
+      (p.descripcion || '').toLowerCase().includes(termino)
+    );
+  }
+  if (orden === 'asc') {
+    lista = [...lista].sort((a, b) => obtenerPrecioNumerico(a) - obtenerPrecioNumerico(b));
+  } else if (orden === 'desc') {
+    lista = [...lista].sort((a, b) => obtenerPrecioNumerico(b) - obtenerPrecioNumerico(a));
+  }
+  renderizarProductos(lista);
+  asignarEventosAgregar();
+}
+
+function inicializarBusquedaYOrden() {
+  const input = document.getElementById('searchInput');
+  const toolbar = document.querySelector('.sort-buttons');
+  if (input) {
+    input.addEventListener('input', () => filtrarYOrdenar());
+  }
+  if (toolbar) {
+    toolbar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.sort-btn');
+      if (!btn) return;
+      toolbar.querySelectorAll('.sort-btn').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      filtrarYOrdenar();
+    });
+  }
 }
 
 function crearTarjetaProducto(producto) {
@@ -42,6 +83,10 @@ function crearTarjetaProducto(producto) {
   const imagenHTML = imageUrl
     ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(producto.nombre)}" loading="lazy" onerror="this.parentNode.innerHTML='📦'" />`
     : '📦';
+
+  const precioFormateado = typeof formatearPrecio === 'function'
+    ? formatearPrecio(producto.precio)
+    : escapeHtml(producto.precio || '');
 
   return `
     <div class="product-card">
@@ -52,7 +97,7 @@ function crearTarjetaProducto(producto) {
         <h3>${escapeHtml(producto.nombre)}</h3>
         <p class="desc">${escapeHtml(producto.descripcion || '')}</p>
         <div class="product-footer">
-          <span class="price"><small>$</small>${escapeHtml(producto.precio || '')}</span>
+          <span class="price"><small>$</small>${precioFormateado}</span>
           <div class="product-cantidad-selector">
             <button type="button" class="cantidad-btn" data-id="${producto.id}" data-accion="restar">−</button>
             <input type="number" class="cantidad-input" data-id="${producto.id}" value="1" min="1" max="99">

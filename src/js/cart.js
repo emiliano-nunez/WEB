@@ -111,6 +111,9 @@ function actualizarBadge() {
     badge.textContent = text;
     badge.style.display = display;
   });
+  document.title = total > 0
+    ? `(${total}) Reflex — Reparación & Accesorios`
+    : 'Reflex — Reparación de Celulares & Accesorios';
 }
 
 function showToast(mensaje) {

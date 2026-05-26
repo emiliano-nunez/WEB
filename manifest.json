@@ -1,0 +1,26 @@
+{
+  "name": "Reflex — Reparación de Celulares & Accesorios",
+  "short_name": "Reflex",
+  "description": "Reparación de celulares, tablets, PC y notebooks. Diagnóstico gratuito, repuestos originales y accesorios.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#f5a800",
+  "orientation": "portrait-primary",
+  "lang": "es-AR",
+  "scope": "/",
+  "categories": ["shopping", "utilities"],
+  "icons": [
+    {
+      "src": "src/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "src/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
