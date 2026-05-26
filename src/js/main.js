@@ -3,6 +3,20 @@ async function cargarProductos() {
   if (!contenedor) return;
 
   if (!window.supabaseClient) {
+    const cache = localStorage.getItem('productos_cache');
+    if (cache) {
+      const data = JSON.parse(cache);
+      const productos = Array.isArray(data) ? data : [];
+      if (productos.length > 0) {
+        window.productos = productos;
+        renderizarProductos(productos);
+        if (typeof pintarCarrito === 'function') pintarCarrito();
+        asignarEventosAgregar();
+        inicializarBusquedaYOrden();
+        if (typeof showToast === 'function') showToast('📡 Modo offline — mostrando productos guardados');
+        return;
+      }
+    }
     contenedor.innerHTML = '<p>No se pudo conectar con la base de datos.</p>';
     if (typeof pintarCarrito === 'function') pintarCarrito();
     return;
@@ -17,6 +31,20 @@ async function cargarProductos() {
 
   if (error) {
     console.error('Error cargando productos desde Supabase:', error);
+    const cache = localStorage.getItem('productos_cache');
+    if (cache) {
+      const cached = JSON.parse(cache);
+      const productos = Array.isArray(cached) ? cached : [];
+      if (productos.length > 0) {
+        window.productos = productos;
+        renderizarProductos(productos);
+        if (typeof pintarCarrito === 'function') pintarCarrito();
+        asignarEventosAgregar();
+        inicializarBusquedaYOrden();
+        if (typeof showToast === 'function') showToast('📡 Modo offline — mostrando productos guardados');
+        return;
+      }
+    }
     contenedor.innerHTML = '<p>Error al cargar productos.</p>';
     if (typeof pintarCarrito === 'function') pintarCarrito();
     return;
@@ -29,6 +57,7 @@ async function cargarProductos() {
     return;
   }
 
+  localStorage.setItem('productos_cache', JSON.stringify(productos));
   window.productos = productos;
   renderizarProductos(productos);
   if (typeof pintarCarrito === 'function') {

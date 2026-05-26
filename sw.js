@@ -1,25 +1,18 @@
 const CACHE_NAME = 'reflex-v1';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/404.html',
-  '/manifest.json',
-  '/src/styles/style.css',
-  '/src/styles/style.min.css',
-  '/src/js/supabase.js',
-  '/src/js/cart.js',
-  '/src/js/main.js',
-  '/src/js/app.js',
-  '/src/js/supabase.min.js',
-  '/src/js/cart.min.js',
-  '/src/js/main.min.js',
-  '/src/js/app.min.js',
-  '/src/img/LOGO.ico',
-  '/src/img/icon-192.png',
-  '/src/img/icon-512.png',
-  '/src/img/fondo promo.png',
-  '/src/img/FONDO.png',
-  '/src/img/FONDO LOGO.jpeg'
+  './',
+  './index.html',
+  './404.html',
+  './manifest.json',
+  './src/styles/style.css',
+  './src/js/supabase.js',
+  './src/js/cart.js',
+  './src/js/main.js',
+  './src/js/app.js',
+  './src/img/LOGO.ico',
+  './src/img/icon-192.png',
+  './src/img/icon-512.png',
+  './src/img/fondo promo.png'
 ];
 
 self.addEventListener('install', event => {
@@ -48,7 +41,7 @@ self.addEventListener('fetch', event => {
 
   if (url.origin !== location.origin) return;
 
-  if (url.pathname.startsWith('/src/img/productos/')) {
+  if (url.pathname.includes('/src/img/productos/')) {
     event.respondWith(
       caches.match(request).then(cached => cached || fetch(request))
     );
@@ -61,7 +54,7 @@ self.addEventListener('fetch', event => {
         const clone = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
         return response;
-      }).catch(() => caches.match('/'))
+      }).catch(() => caches.match('./index.html'))
     );
     return;
   }
