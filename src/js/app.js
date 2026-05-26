@@ -13,7 +13,9 @@
   function aplicarTema(tema) {
     document.documentElement.setAttribute("data-theme", tema);
     if (darkToggle) {
-      darkToggle.textContent = tema === "dark" ? "☀️" : "🌙";
+      darkToggle.innerHTML = tema === "dark"
+        ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zM4.93 4.93a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414L4.93 6.343a1 1 0 0 1 0-1.414zm12.728 12.728a1 1 0 0 1 1.414 0l1.414 1.414a1 1 0 0 1-1.414 1.414l-1.414-1.414a1 1 0 0 1 0-1.414zM2 12a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm16 0a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1zM4.93 19.07a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 0 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zm12.728-12.728a1 1 0 0 1 0-1.414l1.414-1.414a1 1 0 1 1 1.414 1.414l-1.414 1.414a1 1 0 0 1-1.414 0zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>'
+        : '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1 1 0 0 1 .865.494 9.077 9.077 0 0 0 8.637 13.475 1.078 1.078 0 0 1 1.145.367 1.042 1.042 0 0 1 .072 1.165A10.002 10.002 0 1 1 11.14 2.04a1 1 0 0 1 .86-.04zM10.11 4.18a8 8 0 1 0 9.634 12.628A11.079 11.079 0 0 1 10.11 4.18z"/></svg>';
       darkToggle.setAttribute("aria-label", tema === "dark" ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
     }
     localStorage.setItem("tema", tema);
