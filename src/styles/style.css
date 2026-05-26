@@ -24,6 +24,9 @@
   --tooltip-bg: #ffffff;
   --toast-bg: #ffffff;
   --skeleton: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  --scrollbar-track: #e8ecf2;
+  --scrollbar-thumb: #c0c8d8;
+  --scrollbar-thumb-hover: #a0aabc;
 }
 
 [data-theme="dark"] {
@@ -42,6 +45,9 @@
   --tooltip-bg: #1a2233;
   --toast-bg: #1a2233;
   --skeleton: linear-gradient(90deg, #1a2233 25%, #222d44 50%, #1a2233 75%);
+  --scrollbar-track: #151b28;
+  --scrollbar-thumb: #2a3550;
+  --scrollbar-thumb-hover: #3d4a6a;
 }
 
 [data-theme="dark"] body {
@@ -142,6 +148,23 @@
 [data-theme="dark"] .sort-btn.active {
   background: var(--accent);
   color: var(--bg-dark);
+}
+
+[data-theme="dark"] .btn-sm {
+  background: #eee;
+  color: #0b0f19;
+}
+[data-theme="dark"] .btn-sm:hover {
+  background: #d0d0d0;
+}
+[data-theme="dark"] .btn-service {
+  background: #eee;
+  color: #0b0f19;
+  box-shadow: none;
+}
+[data-theme="dark"] .btn-service:hover {
+  background: #d0d0d0;
+  box-shadow: none;
 }
 
 *,
@@ -514,14 +537,14 @@ body {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: #eee;
   color: #0b0f19;
-  box-shadow: 0 8px 28px rgba(131, 102, 41, 0.4);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
 }
 .btn-primary:hover {
-  background: var(--accent-hover);
+  background: #fff;
   transform: translateY(-3px);
-  box-shadow: 0 14px 36px rgba(245, 168, 0, 0.5);
+  box-shadow: 0 14px 36px rgba(153, 127, 127, 0.316);
 }
 
 .btn-whatsapp {
@@ -661,6 +684,12 @@ body {
   border: 1px solid transparent;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card .btn-service {
+  margin-top: auto;
 }
 
 .service-card:hover {
@@ -747,14 +776,11 @@ body {
 
 .service-card--extra {
   display: none;
-  overflow: hidden;
-  max-height: 0;
   opacity: 0;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  border-width: 0 !important;
-  margin-bottom: 0 !important;
-  transition: max-height 0.5s ease, opacity 0.4s ease, padding 0.3s ease, border-width 0.3s ease, margin 0.3s ease;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
+  transition: opacity 0.4s ease, padding 0.3s ease, border-width 0.3s ease;
 }
 
 .services-grid.show-all .service-card--extra {
@@ -873,7 +899,7 @@ body {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
 }
 
@@ -954,7 +980,7 @@ body {
 .product-actions {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .price {
@@ -971,6 +997,9 @@ body {
 }
 
 .btn-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 9px 16px;
   font-size: 0.85rem;
   border-radius: 22px;
@@ -1653,4 +1682,25 @@ body {
 .nav-overlay.active {
   opacity: 1;
   pointer-events: all;
+}
+
+/* ========== CUSTOM SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }

@@ -199,26 +199,35 @@
       if (expanded) {
         extras.forEach((card, i) => {
           card.style.display = "block";
-          card.style.maxHeight = "0";
           card.style.opacity = "0";
           card.style.paddingTop = "0";
           card.style.paddingBottom = "0";
           card.style.borderWidth = "0";
           card.offsetHeight;
           setTimeout(() => {
-            card.style.maxHeight = card.scrollHeight + 64 + "px";
             card.style.opacity = "1";
             card.style.paddingTop = "32px";
             card.style.paddingBottom = "32px";
             card.style.borderWidth = "1px";
           }, i * 80);
         });
+        setTimeout(() => {
+          const allCards = servicesGrid.querySelectorAll(".service-card");
+          let maxHeight = 0;
+          allCards.forEach((card) => {
+            card.style.height = "auto";
+            const h = card.offsetHeight;
+            if (h > maxHeight) maxHeight = h;
+          });
+          allCards.forEach((card) => {
+            card.style.height = maxHeight + "px";
+          });
+        }, extras.length * 80 + 500);
         if (typeof showToast === "function") {
           showToast("🔧 Mostrando todos los servicios");
         }
       } else {
         extras.forEach((card) => {
-          card.style.maxHeight = "0";
           card.style.opacity = "0";
           card.style.paddingTop = "0";
           card.style.paddingBottom = "0";
@@ -226,6 +235,10 @@
           setTimeout(() => {
             card.style.display = "none";
           }, 400);
+        });
+        const allCards = servicesGrid.querySelectorAll(".service-card");
+        allCards.forEach((card) => {
+          card.style.height = "auto";
         });
       }
     });
