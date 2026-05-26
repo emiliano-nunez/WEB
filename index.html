@@ -62,8 +62,8 @@
         </button>
 
         <ul class="nav-links" id="navLinks">
-          <li><a href="#productos">Productos</a></li>
           <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#productos">Productos</a></li>
           <li><a href="#contacto">Contacto</a></li>
           <li><a href="#carrito">Carrito <span class="cart-badge" id="cartBadge">0</span></a></li>
           <li><button class="dark-toggle" id="darkToggle" aria-label="Cambiar modo oscuro">🌙</button></li>
@@ -375,6 +375,15 @@
       </svg>
       <span class="cart-badge" id="floatingCartBadge">0</span>
     </a>
+    <div class="confirm-overlay" id="confirmOverlay">
+      <div class="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <p id="confirmTitle">¿Querés consultar por WhatsApp?</p>
+        <div class="confirm-actions">
+          <button type="button" class="confirm-btn confirm-cancel" id="confirmCancel">Cancelar</button>
+          <button type="button" class="confirm-btn confirm-ok" id="confirmOk">Consultar</button>
+        </div>
+      </div>
+    </div>
     <div class="toast-container" id="toast-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="src/js/supabase.js"></script>

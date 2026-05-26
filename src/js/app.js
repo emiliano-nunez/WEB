@@ -249,4 +249,47 @@
       closeMenu();
     }
   });
+
+  // ========== CONFIRMACIÓN WHATSAPP ==========
+  const confirmOverlay = document.getElementById("confirmOverlay");
+  const confirmCancel = document.getElementById("confirmCancel");
+  const confirmOk = document.getElementById("confirmOk");
+  let pendingWhatsAppUrl = "";
+
+  function abrirConfirmacion(url) {
+    pendingWhatsAppUrl = url;
+    confirmOverlay.classList.add("active");
+  }
+
+  function cerrarConfirmacion() {
+    confirmOverlay.classList.remove("active");
+    pendingWhatsAppUrl = "";
+  }
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("a[href*='wa.me'], a[href*='whatsapp.com']");
+    if (!btn) return;
+    if (btn.classList.contains("confirm-btn")) return;
+    e.preventDefault();
+    abrirConfirmacion(btn.href);
+  });
+
+  confirmCancel.addEventListener("click", cerrarConfirmacion);
+
+  confirmOk.addEventListener("click", () => {
+    if (pendingWhatsAppUrl) {
+      window.open(pendingWhatsAppUrl, "_blank", "noopener");
+    }
+    cerrarConfirmacion();
+  });
+
+  confirmOverlay.addEventListener("click", (e) => {
+    if (e.target === confirmOverlay) cerrarConfirmacion();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && confirmOverlay.classList.contains("active")) {
+      cerrarConfirmacion();
+    }
+  });
 })();
